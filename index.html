@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Local AI Starter Kit — Asdale Dynamics, LLC</title>
+<style>
+  :root {
+    --bg: #f7f5f0;
+    --surface: #ffffff;
+    --ink: #232119;
+    --muted: #6b655c;
+    --line: #e4dccf;
+    --accent: #7c5a3e;
+    --accent-hover: #5d432a;
+    --chip: #f0e8d8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+  }
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+    padding: 1.5rem 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .header-inner { max-width: 1000px; margin: 0 auto; }
+  .site-title {
+    font-size: 1.45rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.25rem;
+  }
+  .site-title a { color: var(--ink); text-decoration: none; }
+  .site-title a:hover { color: var(--accent); }
+  .site-sub { color: var(--muted); font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .credit { font-size: 0.85rem; color: var(--muted); }
+  .credit a { color: var(--accent); text-decoration: none; }
+  .credit a:hover { text-decoration: underline; }
+
+  main { max-width: 1000px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+  .intro {
+    max-width: 700px;
+    margin: 0 auto 2.5rem;
+    text-align: left;
+  }
+  .intro p { margin-bottom: 1rem; color: var(--ink); }
+  .intro p:last-child { margin-bottom: 0; }
+  .howto {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .howto h2 { font-size: 1rem; margin-bottom: 0.75rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; }
+  .howto ol { margin-left: 1.25rem; color: var(--ink); }
+  .howto li { margin-bottom: 0.5rem; }
+  .kbd {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    background: var(--chip);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 0.12rem 0.4rem;
+    font-size: 0.85em;
+  }
+
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  .search-wrap { position: relative; flex: 1 1 260px; min-width: 220px; }
+  #search {
+    width: 100%;
+    padding: 0.7rem 1rem 0.7rem 2.6rem;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 0.95rem;
+  }
+  #search:focus { outline: 2px solid var(--accent); border-color: transparent; }
+  .search-icon {
+    position: absolute; left: 0.8rem; top: 50%; transform: translateY(-50%);
+    color: var(--muted);
+  }
+  .filters { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .filter-btn {
+    padding: 0.45rem 0.9rem;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: var(--surface);
+    color: var(--muted);
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  .count { margin-bottom: 1rem; color: var(--muted); font-size: 0.9rem; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.25rem; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 1.25rem 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px -10px rgba(35,33,25,0.12); border-color: var(--accent); }
+  .card.hidden { display: none; }
+  .card-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.6rem; }
+  .card-name { font-weight: 700; font-size: 1.05rem; color: var(--ink); }
+  .cat { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; background: var(--chip); color: var(--accent); padding: 0.18rem 0.55rem; border-radius: 8px; white-space: nowrap; }
+  .cost { font-size: 0.8rem; font-weight: 700; color: #2f7d32; margin-left: auto; white-space: nowrap; }
+  .card-desc { font-size: 0.9rem; color: var(--ink); margin-bottom: 0.9rem; line-height: 1.5; }
+  .steps { margin-bottom: 1rem; flex: 1; }
+  .steps h4 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.45rem; }
+  .steps ol { margin-left: 1.3rem; color: var(--ink); font-size: 0.86rem; }
+  .steps li { margin-bottom: 0.4rem; }
+  .steps li b { color: var(--accent); }
+  .link-wrap { margin-top: auto; }
+  .official {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.5rem 0.9rem; background: var(--accent); color: #fff;
+    border-radius: 10px; text-decoration: none; font-size: 0.88rem; font-weight: 600;
+    border: 1px solid transparent;
+  }
+  .official:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+  .official svg { width: 14px; height: 14px; }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 2rem 1rem; color: var(--muted); font-size: 0.85rem;
+    max-width: 1000px; margin: 0 auto;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+  .empty { grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="site-title"><a href="#">Free Local AI Starter Kit</a></div>
+    <div class="site-sub">Free local AI programs that run offline: Ollama setup, model picks, frontends, and prompt collections.</div>
+    <div class="credit">A <a href="https://dylanasdale.github.io" target="_blank" rel="noopener">Dylan Asdale</a> project &bull; published by <strong>Asdale Dynamics, LLC</strong> (Indiana, formed October 2026). Beginner-friendly AI education, plain English, step by step.</div>
+  </div>
+</header>
+<main>
+  <div class="intro">
+    <p>Everything in this directory costs <strong>$0</strong>. Download once, run offline on your own computer &mdash; no accounts, no API keys, nothing phones home.</p>
+    <p>Each listing shows its <strong>cost</strong>, <strong>steps</strong> to get started, and the <strong>official link</strong>. No affiliate links, ever.</p>
+  </div>
+
+  <div class="howto">
+    <h2>How to use this site</h2>
+    <ol>
+      <li><strong>Start with Ollama:</strong> it's the engine that runs local AI models on your computer.</li>
+      <li><strong>Pick a model:</strong> Llama 3.2 (3B) is a good first choice for most laptops.</li>
+      <li><strong>Add a frontend (optional):</strong> Open WebUI, AnythingLLM, or LM Studio give you a chat window instead of the terminal.</li>
+      <li><strong>Collect prompts:</strong> download a prompt collection and paste prompts into your local chat &mdash; fully offline.</li>
+    </ol>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <span class="search-icon" aria-hidden="true">&#x1F50D;</span>
+      <input type="search" id="search" placeholder="Search tools, models, steps&hellip;" aria-label="Search listings">
+    </div>
+    <div class="filters" id="filters"></div>
+  </div>
+  <div class="count" id="count"></div>
+  <div class="grid" id="grid"></div>
+</main>
+
+<footer>
+  Published by <strong>Asdale Dynamics, LLC</strong> &mdash; beginner-friendly AI education, books, guides, and practical tools.<br>
+  Dylan Asdale's hub: <a href="https://dylanasdale.github.io" target="_blank" rel="noopener">dylanasdale.github.io</a>.<br>
+  &copy; 2026 Asdale Dynamics, LLC. Licensed under the MIT License &mdash; see <a href="LICENSE">LICENSE</a>. No affiliate links. No secrets, API keys, or personal data in this repository.
+</footer>
+
+<script id="listings-data" type="application/json">
+[
+  {
+    "id": "ollama",
+    "name": "Ollama",
+    "category": "Ollama Setup",
+    "cost": "$0 free",
+    "description": "The engine that runs large language models locally on Mac, Windows, and Linux. Downloads and serves models, then stops them when you're done.",
+    "steps": [
+      "Download the installer for your operating system.",
+      "Run the installer and follow the prompts.",
+      "Open a terminal and verify: <kbd>ollama --version</kbd>",
+      "Run your first model: <kbd>ollama run llama3.2</kbd>",
+      "Type <kbd>/bye</kbd> or press Ctrl+D to exit the chat."
+    ],
+    "link": "https://ollama.com"
+  },
+  {
+    "id": "llama32",
+    "name": "Llama 3.2 (3B)",
+    "category": "Model Picks",
+    "cost": "$0 free",
+    "description": "Fast, capable starter model for writing, summarizing, and general questions. Light enough for most laptops.",
+    "steps": [
+      "Open a terminal with Ollama running.",
+      "Download the model: <kbd>ollama pull llama3.2</kbd>",
+      "Run it: <kbd>ollama run llama3.2</kbd>"
+    ],
+    "link": "https://ollama.com/library/llama3.2"
+  },
+  {
+    "id": "qwen25",
+    "name": "Qwen 2.5 (7B)",
+    "category": "Model Picks",
+    "cost": "$0 free",
+    "description": "Strong general-purpose model for drafting, reasoning, and longer writing tasks.",
+    "steps": [
+      "Open a terminal with Ollama running.",
+      "Download the model: <kbd>ollama pull qwen2.5:7b</kbd>",
+      "Run it: <kbd>ollama run qwen2.5:7b</kbd>"
+    ],
+    "link": "https://ollama.com/library/qwen2.5"
+  },
+  {
+    "id": "phi4",
+    "name": "Phi-4 (14B)",
+    "category": "Model Picks",
+    "cost": "$0 free",
+    "description": "Microsoft's small-but-sharp reasoning model. Strong on logic, math, and structured tasks.",
+    "steps": [
+      "Open a terminal with Ollama running.",
+      "Download the model: <kbd>ollama pull phi4</kbd>",
+      "Run it: <kbd>ollama run phi4</kbd>"
+    ],
+    "link": "https://ollama.com/library/phi4"
+  },
+  {
+    "id": "gemma3",
+    "name": "Gemma 3 (4B)",
+    "category": "Model Picks",
+    "cost": "$0 free",
+    "description": "Google's compact, capable model for everyday chats and writing help.",
+    "steps": [
+      "Open a terminal with Ollama running.",
+      "Download the model: <kbd>ollama pull gemma3:4b</kbd>",
+      "Run it: <kbd>ollama run gemma3:4b</kbd>"
+    ],
+    "link": "https://ollama.com/library/gemma3"
+  },
+  {
+    "id": "open-webui",
+    "name": "Open WebUI",
+    "category": "Frontends",
+    "cost": "$0 open source",
+    "description": "Full-featured web interface for Ollama with saved chats, document uploads, and multiple model support. Self-hosted with Docker.",
+    "steps": [
+      "Install Docker Desktop.",
+      "Run Ollama in one terminal window.",
+      "Start Open WebUI with Docker (see README for the command).",
+      "Open http://localhost:3000 and create an admin account.",
+      "Connect Ollama at http://host.docker.internal:11434"
+    ],
+    "link": "https://openwebui.com"
+  },
+  {
+    "id": "anythingllm",
+    "name": "AnythingLLM Desktop",
+    "category": "Frontends",
+    "cost": "$0 free for personal use",
+    "description": "Desktop app to chat with local models and your own documents (PDFs, text files) offline.",
+    "steps": [
+      "Download AnythingLLM Desktop from the official site.",
+      "Install and launch the app.",
+      "Choose Ollama as your LLM provider at http://localhost:11434",
+      "Import a folder of documents to chat with your own files offline."
+    ],
+    "link": "https://anythingllm.com"
+  },
+  {
+    "id": "lmstudio",
+    "name": "LM Studio",
+    "category": "Frontends",
+    "cost": "$0 free for personal use",
+    "description": "Desktop app for discovering, downloading, and running models with a visual chat interface and local API server.",
+    "steps": [
+      "Download and install LM Studio.",
+      "Use the built-in catalog to download a model (try Llama 3.2 3B).",
+      "Start the local server in the app.",
+      "Chat inside LM Studio, or point tools at http://localhost:1234"
+    ],
+    "link": "https://lmstudio.ai"
+  },
+  {
+    "id": "awesome-prompts",
+    "name": "Awesome ChatGPT Prompts",
+    "category": "Prompt Collections",
+    "cost": "$0 free",
+    "description": "Community collection of ready-to-use prompts for writing, coding, learning, and productivity.",
+    "steps": [
+      "Visit the GitHub repo and download the ZIP, or <kbd>git clone</kbd> it.",
+      "Open the prompt file in any text editor.",
+      "Copy a prompt and paste it into your local model chat.",
+      "Works fully offline once downloaded."
+    ],
+    "link": "https://github.com/f/awesome-chatgpt-prompts"
+  },
+  {
+    "id": "prompting-guide",
+    "name": "Prompt Engineering Guide",
+    "category": "Prompt Collections",
+    "cost": "$0 free",
+    "description": "Free guide to writing better prompts, with examples you can practice with offline.",
+    "steps": [
+      "Visit promptingguide.ai and read the basics section.",
+      "Save the page for offline reading.",
+      "Try the example prompts in your local model chat and tweak them."
+    ],
+    "link": "https://www.promptingguide.ai"
+  }
+]
+</script>
+<script>
+(function () {
+  var dataEl = document.getElementById('listings-data');
+  var listings = JSON.parse(dataEl.textContent);
+  var grid = document.getElementById('grid');
+  var countEl = document.getElementById('count');
+  var filtersEl = document.getElementById('filters');
+  var searchEl = document.getElementById('search');
+
+  var categories = [];
+  listings.forEach(function (item) {
+    if (categories.indexOf(item.category) === -1) categories.push(item.category);
+  });
+
+  var state = { query: '', category: '' };
+
+  function escapeHtml(text) {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(text));
+    return div.innerHTML;
+  }
+
+  function renderFilters() {
+    filtersEl.innerHTML = '';
+    var allBtn = document.createElement('button');
+    allBtn.type = 'button';
+    allBtn.className = 'filter-btn active';
+    allBtn.textContent = 'All';
+    allBtn.addEventListener('click', function () { state.category = ''; render(); });
+    filtersEl.appendChild(allBtn);
+    categories.forEach(function (cat) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'filter-btn';
+      btn.textContent = cat;
+      btn.addEventListener('click', (function (c) { return function () { state.category = c; render(); }; })(cat));
+      filtersEl.appendChild(btn);
+    });
+  }
+
+  function matches(item) {
+    var q = state.query.toLowerCase();
+    var haystack = (item.name + ' ' + item.category + ' ' + item.description + ' ' + item.steps.join(' ')).toLowerCase();
+    var byQuery = q === '' || haystack.indexOf(q) !== -1;
+    var byCat = state.category === '' || item.category === state.category;
+    return byQuery && byCat;
+  }
+
+  function render() {
+    var filtered = listings.filter(matches);
+    countEl.textContent = filtered.length + ' listing' + (filtered.length !== 1 ? 's' : '') + ' found';
+    grid.innerHTML = '';
+    if (filtered.length === 0) {
+      var empty = document.createElement('div');
+      empty.className = 'empty';
+      empty.textContent = 'No listings match your search.';
+      grid.appendChild(empty);
+      return;
+    }
+    filtered.forEach(function (item) {
+      var card = document.createElement('article');
+      card.className = 'card';
+      var stepsHtml = item.steps.map(function (s) { return '<li>' + s + '</li>'; }).join('');
+      card.innerHTML =
+        '<div class="card-head">' +
+        '<span class="cat">' + escapeHtml(item.category) + '</span>' +
+        '<span class="cost">' + escapeHtml(item.cost) + '</span>' +
+        '</div>' +
+        '<h3 class="card-name">' + escapeHtml(item.name) + '</h3>' +
+        '<p class="card-desc">' + escapeHtml(item.description) + '</p>' +
+        '<div class="steps"><h4>Steps</h4><ol>' + stepsHtml + '</ol></div>' +
+        '<div class="link-wrap"><a href="' + escapeHtml(item.link) + '" class="official" target="_blank" rel="noopener">Official site <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></a></div>';
+      grid.appendChild(card);
+    });
+  }
+
+  searchEl.addEventListener('input', function () { state.query = this.value; render(); });
+
+  renderFilters();
+  render();
+})();
+</script>
+</body>
+</html>
