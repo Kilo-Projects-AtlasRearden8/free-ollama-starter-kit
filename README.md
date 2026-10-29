@@ -1,22 +1,44 @@
 # Free Local AI Starter Kit
 
-A free, local-first directory of AI tools you can run entirely offline on your own computer. No subscriptions, no API keys, no affiliate links, and nothing phones home after you download it.
+A free, local-first directory of AI tools you can run entirely offline on your own computer. No subscriptions, no API keys, no affiliate links, and nothing in this directory tracks you.
 
 Built by **Asdale Dynamics, LLC** (Indiana, formed October 2026) for Dylan Asdale's beginner-friendly AI education work — books, guides, and practical tools explained plainly, step by step, like a friend would.
 
+## Who this is for
+
+Anyone who wants to try AI without handing over their data or a credit card. If you've heard about local AI but weren't sure where to start, start here.
+
 ## What "local AI" means
 
-You download the software and the models once, then run them on your own machine. No account required, no monthly bill, and your prompts never leave your computer. Perfect for private writing, book work, and sensitive notes.
+You download the software and the models once, then run them on your own machine. No account required, no monthly bill, and your prompts never leave your computer. Good for private writing, book work, and sensitive notes.
+
+Downloading models uses the internet once; after that, everything runs offline.
 
 ## How to use this directory
 
-Each listing below shows its **cost** (all are $0), **steps** to get started, and the **official link** to download it. Pick one listing, follow the steps, and you're running local AI.
+Each listing below shows three things:
+
+- **Cost** — what you pay (every listing here is $0)
+- **Steps** — what to do, in order
+- **Official link** — where to download it straight from the source
+
+No affiliate links, ever. Pick one listing, follow the steps, and you're running local AI.
+
+## View this directory as a website
+
+This folder includes a static website with client-side search: `index.html`. Open it directly in any browser, or serve it locally:
+
+```
+python3 -m http.server 8000
+```
+
+Then open http://localhost:8000/index.html. Search and filter work entirely in your browser — nothing is sent to a server.
 
 ## 1. Ollama setup (start here)
 
 ### Ollama
 
-Ollama is the engine that runs large language models locally on Mac, Windows, and Linux. It handles downloading models, serving them, and stopping them when you're done.
+Ollama is the engine that runs large language models locally on Mac, Windows, and Linux. It downloads models, serves them, and stops them when you're done.
 
 - **Cost:** $0 (free, open source)
 - **Steps:**
@@ -93,11 +115,13 @@ A full-featured web interface for Ollama with saved chats, document uploads, and
   1. Install Docker Desktop from https://www.docker.com
   2. Run Ollama in one terminal window
   3. Start Open WebUI:
+
      ```
      docker run -d -p 3000:8080 --add-host=host.docker.internal:host-gateway \
        -v open-webui:/app/backend/data --name open-webui --restart always \
        ghcr.io/open-webui/open-webui:main
      ```
+
   4. Open http://localhost:3000 and create an admin account
   5. In Settings → Admin, confirm Ollama is connected at http://host.docker.internal:11434
 - **Official link:** https://openwebui.com
@@ -156,8 +180,12 @@ A free guide to writing better prompts, with examples you can practice with offl
 ## Staying safe
 
 - These are educational tools, not medical advice. If you're a healthcare worker exploring AI, use it for learning and admin only — never for patient diagnoses or treatment decisions.
-- No listing here contains affiliate links, tracking, or paid upsells. Everything listed has a genuine free tier or is fully open source.
+- No listing here contains affiliate links, tracking, or paid upsells. Everything listed has a genuine free tier or is fully open source. Individual apps may have their own privacy practices; check each official site for details.
 - Downloading models uses internet once; after that, everything runs offline.
+
+## About Asdale Dynamics, LLC
+
+Asdale Dynamics, LLC (Indiana, formed October 2026) is Dylan Asdale's LLC for beginner-friendly AI education, books, and guides. Dylan is a registered nurse turned AI author. His book *The Massive AI Manual* and hub site https://dylanasdale.github.io explain AI plainly, step by step, like a friend would. This directory is published by Asdale Dynamics, LLC.
 
 ## License
 
